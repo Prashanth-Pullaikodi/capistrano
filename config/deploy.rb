@@ -50,7 +50,7 @@ namespace :deploy do
       execute "docker rm #{fetch(:application)} ; true"
 
       # modify this to suit how you want to run your app
-      execute "docker run --name nginx -d -p 8081:80 #{fetch(:application)}"
+      execute "docker run --name nginx -d -p 8081:80 #{fetch(:remote_repo)}"
     end
   end
 end
