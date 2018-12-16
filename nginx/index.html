@@ -1,0 +1,351 @@
+# ports must be used to configure the load-balancer / firewall:
+# port 8080: available to public internet
+# port 8081: available to VL
+# port 8082: VL backoffice
+# port 80 (and everything else): must not be available outside the Swarm network
+
+
+# services available to the public internet (port 8080)
+#
+server {
+    listen       80;
+    listen       8080 default_server;
+    server_name  banking.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://frontend_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+        client_max_body_size 50M;
+    }
+}
+
+
+# API Gateway: port 8081
+#
+server {
+    listen       80;
+    listen       8081;
+    server_name  api.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://api_gateway_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    listen       8081;
+    server_name  api-vl.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://api_gateway_vl_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+# backoffice: port 8082
+#
+server {
+    listen       80;
+    listen       8082;
+    server_name  mybackoffice.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://backoffice_vl_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+
+# service which must not be available outside the application / Swarm (in production)
+#
+server {
+    listen       80;
+    server_name  backoffice.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://backoffice_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  onboarding.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://onboarding_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+        client_max_body_size 50M;
+    }
+}
+
+server {
+    listen       80;
+    server_name  card-gateway.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://card_gateway_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  card_management.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://card_management_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  cash_transfer.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://cash_transfer_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  transfer_cart.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://transfer_cart_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  transaction_query_service.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://transaction_query_service_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  adapter.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://adapter_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  event_store.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://event_store_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  portainer.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://portainer:9000;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_pass $target;
+    }
+
+    location /api/websocket/ {
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_http_version 1.1;
+        proxy_pass $target/api/websocket/;
+    }
+}
+
+server {
+    listen       80;
+    server_name  rabbitadmin.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://rabbitmq:15672;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  bunny.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://bunny:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  errbit.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://errbit_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  data_exporter.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://data_exporter_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  bancos-mock.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://bancos_mock_server_web:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
+
+server {
+    listen       80;
+    server_name  mailcatcher.*;
+
+    location / {
+        resolver 127.0.0.11 ipv6=off;
+
+        set $target http://mailcatcher:1080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass $target;
+    }
+}
