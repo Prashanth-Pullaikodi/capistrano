@@ -35,7 +35,7 @@ namespace :deploy do
       execute "docker rm #{fetch(:application)} ; true"
 
       # modify this to suit how you want to run your app
-      execute "docker run -d -p 8081:80 --restart=always --name=#{fetch(:application)}"
+      execute "docker run --name nginx -d -p 8081:80  --name=#{fetch(:application)}"
     end
   end
 end
