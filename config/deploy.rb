@@ -35,7 +35,7 @@ task :go => ['build', 'push', 'deploy']
 desc 'deploy'
 task :deploy do
   on roles(:app) do
-    execute "docker pull #{fetch(:remote_repo)}/#{fetch(:application)}"
+    execute "docker pull #{fetch(:remote_repo)}"
     Rake::Task['deploy:restart'].invoke
   end
 end
