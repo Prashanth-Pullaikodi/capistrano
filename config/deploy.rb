@@ -1,4 +1,5 @@
 # config valid only for current version of Capistrano
+#
 lock "3.11.0"
 
 set :application, "nginx"
@@ -35,7 +36,8 @@ namespace :deploy do
       execute "docker rm #{fetch(:application)} ; true"
 
       # modify this to suit how you want to run your app
-      execute "docker run --name nginx -d -p 8081:80  --name=#{fetch(:application)}"
+      execute "docker run --name nginx -d -p 8081:80 #{fetch(:application)}"
+
     end
   end
 end
