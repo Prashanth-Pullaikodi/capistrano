@@ -56,18 +56,30 @@ set :remote_repo, "your_docker_hub_account_name/#{fetch(:application)}"
  ```
 
 ## Deployment:
-Go to your Capistrano directory.
 
-Note: If you want to build your own nginx docker image ,make sure you have docker running on your local meachine as well.
-
-
-Note: Before running cap command you make sure that you login to your dockerHUB repo on both local and vgarant node.
+Note: Before running deployment,make sure that you login to your dockerHUB repo on both local and vgarant node.
 
 ```bash
 docker login
 Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
 Username (xxxx):
 ```
+
+if you have Jenkins installed and configured ,then  create a free style job and copy the config.xml to Jenkins job directory.
+
+Note - Make sure you installed (Jenkins Git plugins)
+```bash
+cd capistrano
+cp  config.xml /Users/username/.jenkins/jobs/jenkins_job_name/config.xml
+```
+And restart your jenkins service to make effect the change.
+
+## OR Follow below manual step to deploy the app.
+
+Go to your Capistrano directory.
+
+Note: If you want to build your own nginx docker image ,make sure you have docker running on your local meachine as well.
+
 
 ```bash
 cd capistrano
