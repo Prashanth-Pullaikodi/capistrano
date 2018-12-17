@@ -1,7 +1,6 @@
 # Capistrano::Docker::Vagrant
 
-Build and deploy docker images with capistrano on vagrant box.
-
+Continuous deployment  using Jenkins , Capistrano ,Vagrant and Docker .
 
 # How it works!!!!
 
@@ -14,11 +13,11 @@ Capistrano will push your code into vagrant box when you run cap commands.
   - [Ruby](https://www.ruby-lang.org/en/)      : Install and configure Ruby.
   - [Capistrano](https://capistranorb.com/)    : Install and configure capistrano .
   - [Vagrant](https://www.vagrantup.com/)      : Install and configure vagrant.
-  - [VirtualBox](https://www.virtualbox.org/)  :Install and confgiure VirtualBox. 
+  - [VirtualBox](https://www.virtualbox.org/)  :Install and confgiure VirtualBox.
   - [Docker](https://www.docker.com/)          :Install and confgure docker on Vagrant box.
 
 Once you installed Vagrant and VirtualBox you can clone repo [https://github.com/Prashanth-Pullaikodi/vagrant_docker_ansible] to your local machine and run Vagrant Up will create a Virtualbox with Docker installed.
- 
+
  ```bash
     cd vagrant_docker_ansible
     vagrant up
@@ -28,16 +27,16 @@ Once you installed Vagrant and VirtualBox you can clone repo [https://github.com
 
 Clone this repo [https://github.com/Prashanth-Pullaikodi/capistrano] to your local node.
   ```bash   
- git clone git@github.com:Prashanth-Pullaikodi/capistrano.git 
+ git clone git@github.com:Prashanth-Pullaikodi/capistrano.git
  cd capistrano
 ```
 
 Run (vagrant ssh-config)  , Find out your vagrant Port and Key path  and modify below values.
 
-Port:  and   Keys: 
+Port:  and   Keys:
 
  ```bash
-vi config/deploy/vagrantbox.rb 
+vi config/deploy/vagrantbox.rb
 
 set :ssh_options, {
        user: 'vagrant', # overrides user setting above
@@ -67,7 +66,7 @@ Note: Before running cap command you make sure that you login to your dockerHUB 
 ```bash
 docker login
 Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
-Username (xxxx): 
+Username (xxxx):
 ```
 
 ```bash
@@ -77,7 +76,3 @@ bundle exec cap vagrantbox push    # This will push your nginx docker image to y
 bundle exec cap vagrantbox deploy  # This will deploy your Nginx app in your vagrant box.
 bundle exec cap vagrantbox -T      #List all the capistrano commands.
 ```
-
-
-
-
