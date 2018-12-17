@@ -16,7 +16,7 @@ set :linked_dirs, %w(my_shared_directory)
 # Default value for :pty is false
 set :pty, true
 
-set :remote_repo, "docker.io/ppullaikodi/#{fetch(:application)}"
+set :remote_repo, "ppullaikodi/#{fetch(:application)}"
 
 desc 'Build Docker images'
 task :build do
