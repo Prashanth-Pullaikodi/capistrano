@@ -1,9 +1,10 @@
-sh "source ~/.bashrc"
+
 node {
     stage "Create build output"
     
-    sh "source ~/.bashrc"
+    
     dir('capistrano') {
+        sh "source ~/.bashrc"
         sh  "bundle exec cap vagrantbox build"
     }
    
