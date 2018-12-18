@@ -30,10 +30,9 @@ pipeline {
                  withEnv(["PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"]){ 
                     dir('config') {
                             sh 'cap vagrantbox deploy'
-                   }
-                  
-
-            }
-        }
+                    } 
+               }
+          }
+       }
     }
 }
