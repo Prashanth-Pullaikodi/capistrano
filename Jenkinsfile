@@ -7,6 +7,7 @@ node {
       
      ]){
          dir('config') {
+                    workspace = pwd ()
                     sh 'ls -lt'
                     sh 'bundle exec cap vagrantbox build'
         } 
