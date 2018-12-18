@@ -18,26 +18,30 @@ set :pty, true
 
 set :remote_repo, "ppullaikodi/#{fetch(:application)}"
 
-desc 'Build Docker images'
-task :build do
-  # build the actual docker image, tagging the push for the remote repo
-  system "docker build -t #{fetch(:remote_repo)} nginx/."
-end
+namespace :docker do
 
-desc 'Push Docker images'
-task :push do
-  system "docker push #{fetch(:remote_repo)}"
-end
-
-desc 'go'
-task :go => ['build', 'push', 'deploy']
-
-desc 'deploy'
-task :deploy do
-  on roles(:app) do
-    execute "docker pull #{fetch(:remote_repo)}"
-    Rake::Task['deploy:restart'].invoke
+  desc 'Build Docker images'
+  task :build_image do
+    on roles(:app) do
+      system "docker build -t #{fetch(:remote_repo)} nginx/."
+    end
   end
+
+  desc "Push docke Image to Registry."
+  task :push_image do
+    on roles(:app) do
+      system "docker push #{fetch(:remote_repo)}"
+    end
+  end
+
+  desc "Deploy APP"
+  task :deploy do
+    on roles(:app) do
+      execute "docker pull #{fetch(:remote_repo)}"
+      Rake::Task['deploy:restart'].invoke
+   end
+  end
+
 end
 
 namespace :deploy do
