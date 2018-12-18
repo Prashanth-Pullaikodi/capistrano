@@ -4,12 +4,29 @@ pipeline {
     stages {
         stage ('Compile Stage') {
 
-         sh ' ls -lt'
-        }
-     stage ('Test Stage') {
+            steps {
+              
+                    sh 'ls -t'
 
-         sh ' ls -lt'
+            }
         }
 
+        stage ('Testing Stage') {
+
+            steps {
+
+                    sh 'ls -a '
+
+            }
+        }
+
+
+        stage ('Deployment Stage') {
+            steps {
+ 
+                    sh 'ls  '
+
+            }
+        }
     }
 }
