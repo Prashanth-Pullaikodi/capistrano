@@ -1,11 +1,11 @@
 # Capistrano::Docker::Vagrant
 
-Continuous deployment  using Jenkins , Capistrano ,Vagrant and Docker .
+Continuous deployment  using Jenkins Pipeline , Capistrano ,Vagrant and Docker .
 
 # How it works!!!!
 
 Capistrano is a framework for building automated deployment scripts on remote node.Here your VirtualBox will be a remote node.
-Capistrano will push your code into vagrant box when you run cap commands.
+Capistrano will push your code into vagrant box when you run cap commands,which will build Docker image ,Push to registry and deploy the NGINX we b application (which is accessible http://localhost:8081 )
 
 
 # Pre-Requitse:
@@ -65,9 +65,9 @@ Login with your Docker ID to push and pull images from Docker Hub. If you don't 
 Username (xxxx):
 ```
 
-if you have Jenkins installed and configured ,then  create a free style job and copy the config.xml to Jenkins job directory.
+if you have Jenkins installed and configured ,Use  pipile line file 'Jenkinsfile' to  build and deploy the app or create a free style job and copy the config.xml to Jenkins job directory.
 
-Note - Make sure you installed (Jenkins Git plugins)
+Note - Make sure you installed (Jenkins Git and Pipiline plugins)
 ```bash
 cd capistrano
 cp  config.xml /Users/username/.jenkins/jobs/jenkins_job_name/config.xml
