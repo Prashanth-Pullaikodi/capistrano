@@ -1,4 +1,4 @@
-source ~/.bashrc 
+sh 'source ~/.bashrc '
 node {
   stage 'Commit'
   checkout scm
