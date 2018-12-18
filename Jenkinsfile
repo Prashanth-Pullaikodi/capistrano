@@ -3,12 +3,10 @@ pipeline {
 
     stages {
         stage ('Build Image') {
-                 withEnv([
-                    "PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH",
-      
-                    ]){
+                 
             steps {
-                        dir('config') {
+                withEnv(["PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"]){      
+                dir('config') {
                         sh 'cap vagrantbox docker:build_image'
                         }
             }
