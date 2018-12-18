@@ -6,6 +6,10 @@ pipeline {
 
          sh ' ls -lt'
         }
+     stage ('Test Stage') {
+
+         sh ' ls -lt'
+        }
 
     }
 }
