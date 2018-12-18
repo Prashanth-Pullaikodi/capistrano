@@ -27,8 +27,11 @@ pipeline {
 
         stage ('Deployment Stage') {
             steps {
- 
-                    sh 'cap vagrantbox deploy'
+                 withEnv(["PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"]){ 
+                    dir('config') {
+                            sh 'cap vagrantbox deploy'
+                   }
+                  
 
             }
         }
