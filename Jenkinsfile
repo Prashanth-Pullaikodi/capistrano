@@ -4,7 +4,7 @@ node {
     checkout scm 
      withEnv([
       "PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH",
-      "RBENV_SHELL=sh"
+      
      ]){
          dir('config') {
                     sh 'ls -lt'
