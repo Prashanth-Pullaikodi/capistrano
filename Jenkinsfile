@@ -5,6 +5,6 @@ node {
       "PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH",
       "RBENV_SHELL=sh"
      ]){
-    sh '''bundle exec cap vagrantbox build''' 
+    sh 'bundle exec cap vagrantbox build' 
      }
 }
