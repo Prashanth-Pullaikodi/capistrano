@@ -6,7 +6,9 @@ node {
       "PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH",
       "RBENV_SHELL=sh"
      ]){
-    sh 'ls -lt'
-    sh 'bundle exec cap vagrantbox build' 
+         dir('capistrano') {
+                    sh 'ls -lt'
+                    sh 'bundle exec cap vagrantbox build'
+        } 
      }
 }
