@@ -1,3 +1,4 @@
+sh "source ~/.bashrc"
 node {
     stage "Create build output"
     
