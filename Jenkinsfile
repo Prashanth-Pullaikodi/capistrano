@@ -2,20 +2,20 @@ pipeline {
     agent any
 
     stages {
-        stage ('Build Stage') {
+        stage ('Build Image') {
 
             steps {
               
-                    sh 'ls -t'
+                    sh 'cap vagrantbox docker:build_image'
 
             }
         }
 
-        stage ('Push Stage') {
+        stage ('Push Image') {
 
             steps {
 
-                    sh 'ls -a '
+                    sh 'cap vagrantbox docker:push_image'
 
             }
         }
@@ -24,7 +24,7 @@ pipeline {
         stage ('Deployment Stage') {
             steps {
  
-                    sh 'ls  '
+                    sh 'cap vagrantbox deploy'
 
             }
         }
