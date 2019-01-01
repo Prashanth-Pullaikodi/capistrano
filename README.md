@@ -2,6 +2,8 @@
 
 Continuous deployment  using Jenkins Pipeline , Capistrano ,Vagrant and Docker .
 
+For detailed documentation refer my blog {https://devops-geek.blogspot.com](https://devops-geek.blogspot.com/2018/12/continuous-deployment-jenkins.html)
+
 # How it works!!!!
 
 Capistrano is a framework for building automated deployment scripts on remote node.Here your VirtualBox will be a remote node.
