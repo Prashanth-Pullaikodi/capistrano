@@ -2,7 +2,7 @@
 
 Continuous deployment  using Jenkins Pipeline , Capistrano ,Vagrant and Docker .
 
-For detailed documentation refer my blog {https://devops-geek.blogspot.com](https://devops-geek.blogspot.com/2018/12/continuous-deployment-jenkins.html)
+For detailed documentation refer my blog [https://devops-geek.blogspot.com](https://devops-geek.blogspot.com/2018/12/continuous-deployment-jenkins.html)
 
 # How it works!!!!
 
