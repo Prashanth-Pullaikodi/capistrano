@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mutual Fund Tracker</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #1f2937; }
+      .wrap { max-width: 1200px; margin: 0 auto; padding: 16px; }
+      .topbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+      button { border: 0; border-radius: 8px; padding: 10px 14px; cursor: pointer; font-weight: 600; }
+      .btn-primary { background: #2563eb; color: #fff; }
+      .btn-secondary { background: #0f766e; color: #fff; }
+      .card { background: #fff; border-radius: 12px; padding: 12px; margin-top: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 12px; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { text-align: left; border-bottom: 1px solid #e5e7eb; padding: 8px; font-size: 13px; }
+      th { background: #f3f4f6; position: sticky; top: 0; }
+      .status { margin-left: 8px; font-size: 12px; color: #374151; }
+      .muted { color: #6b7280; font-size: 12px; }
+      .scroll { max-height: 360px; overflow: auto; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="topbar card">
+        <button class="btn-primary" onclick="manualSync()">Manual Sync Now</button>
+        <button class="btn-secondary" onclick="enableDailySync()">Enable Daily Sync</button>
+        <span class="status" id="syncStatus">Ready.</span>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Latest Scheme Performance</h3>
+          <div class="scroll">
+            <table id="perfTbl">
+              <thead>
+                <tr>
+                  <th>Fund</th><th>Scheme %</th><th>Category Avg %</th><th>Index %</th><th>Updated</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Latest Alerts</h3>
+          <div class="scroll">
+            <table id="alertTbl">
+              <thead><tr><th>Time</th><th>Fund</th><th>Type</th><th>Message</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Google News (Tracked Funds)</h3>
+        <div class="scroll">
+          <table id="newsTbl">
+            <thead><tr><th>Time</th><th>Fund</th><th>Title</th><th>Source</th><th>Published</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="muted">Tip: Edit the "Funds" sheet to add your fund list and Value Research URLs.</p>
+      </div>
+    </div>
+
+    <script>
+      function onLoad() {
+        google.script.run.withSuccessHandler(renderDashboard).getDashboardData();
+      }
+
+      function manualSync() {
+        setStatus('Syncing...');
+        google.script.run
+          .withSuccessHandler(function (res) {
+            setStatus(res.message);
+            google.script.run.withSuccessHandler(renderDashboard).getDashboardData();
+          })
+          .withFailureHandler(function (err) {
+            setStatus('Sync failed: ' + err.message);
+          })
+          .manualSync();
+      }
+
+      function enableDailySync() {
+        google.script.run
+          .withSuccessHandler(function (msg) { setStatus(msg); })
+          .withFailureHandler(function (err) { setStatus('Trigger setup failed: ' + err.message); })
+          .setupDailyTrigger();
+      }
+
+      function setStatus(msg) {
+        document.getElementById('syncStatus').innerText = msg;
+      }
+
+      function renderDashboard(data) {
+        renderPerf(data.latestSnapshots || []);
+        renderAlerts(data.latestAlerts || []);
+        renderNews(data.latestNews || []);
+        setStatus('Loaded at ' + new Date().toLocaleString());
+      }
+
+      function renderPerf(rows) {
+        const tb = document.querySelector('#perfTbl tbody');
+        tb.innerHTML = '';
+        rows.forEach(r => {
+          tb.innerHTML += `<tr>
+            <td>${esc(r.fundName || r.fundCode)}</td>
+            <td>${fmt(r.schemeReturn)}</td>
+            <td>${fmt(r.categoryAvgReturn)}</td>
+            <td>${fmt(r.indexReturn)}</td>
+            <td>${fmtDate(r.timestamp)}</td>
+          </tr>`;
+        });
+      }
+
+      function renderAlerts(rows) {
+        const tb = document.querySelector('#alertTbl tbody');
+        tb.innerHTML = '';
+        rows.forEach(r => {
+          tb.innerHTML += `<tr>
+            <td>${fmtDate(r.timestamp)}</td>
+            <td>${esc(r.fundCode)}</td>
+            <td>${esc(r.alertType)}</td>
+            <td>${esc(r.message)}</td>
+          </tr>`;
+        });
+      }
+
+      function renderNews(rows) {
+        const tb = document.querySelector('#newsTbl tbody');
+        tb.innerHTML = '';
+        rows.forEach(r => {
+          const link = r.url ? `<a href="${escAttr(r.url)}" target="_blank">${esc(r.title)}</a>` : esc(r.title);
+          tb.innerHTML += `<tr>
+            <td>${fmtDate(r.timestamp)}</td>
+            <td>${esc(r.fundCode)}</td>
+            <td>${link}</td>
+            <td>${esc(r.source)}</td>
+            <td>${esc(r.publishedAt)}</td>
+          </tr>`;
+        });
+      }
+
+      function fmt(v) {
+        return (v === '' || v === null || v === undefined) ? '-' : Number(v).toFixed(2);
+      }
+
+      function fmtDate(v) {
+        if (!v) return '-';
+        return new Date(v).toLocaleString();
+      }
+
+      function esc(s) {
+        return String(s || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m]));
+      }
+
+      function escAttr(s) {
+        return esc(s).replace(/"/g, '&quot;');
+      }
+
+      onLoad();
+    </script>
+  </body>
+</html>
